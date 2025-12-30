@@ -1,0 +1,52 @@
+# Configuration (contains sensitive credentials)
+config.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Logs
+*.log
+logs/
+keepalive.log
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Project specific
+debug_output.txt
+test_results.txt
+
+# Development artifacts
+REFACTORING_SUMMARY.md
+PROJECT_STRUCTURE.md
+.plan.md
