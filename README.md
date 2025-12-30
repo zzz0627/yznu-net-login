@@ -8,6 +8,10 @@
 
 ---
 
+[toc]
+
+____
+
 ## ✨ 简介
 
 本项目实现了一个轻量级的校园网自动登录守护进程，用于解决以下场景：
@@ -66,8 +70,8 @@ copy config.json.example config.json
 
 ```json
 {
-  "username": "YourID",     // 改为您的账号
-  "password": "YourPassword", // 改为您的密码
+  "username": "YourID",     
+  "password": "YourPassword"
 }
 ```
 
@@ -161,9 +165,51 @@ A: 校园网网关地址可能变更。请在浏览器按 `F12` 抓包手动登�
 
 A: 是的。本程序运行在您的 PC 上。如果需要 24 小时在线，建议部署在树莓派或闲置工控机上。
 
+**Q: 发生运行异常但是无法查看报错信息**
+A: 问题出在使用 `pythonw.exe` 运行时无控制台窗口。请查看目录下的 `campus_login.log` 文件（需确保代码已配置文件日志）。
+
 ---
 
 ## 🛡️ 技术细节
+
+### 流程图
+
+```mermaid
+flowchart TD
+    %% 节点样式定义
+    classDef process fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    classDef decision fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
+    classDef terminator fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,rx:10,ry:10;
+    classDef error fill:#ffebee,stroke:#c62828,stroke-width:2px;
+
+    Start((守护进程启动)):::terminator --> LoadCfg[加载 config.json]:::process
+    LoadCfg --> MonitorLoop
+
+    subgraph DetectModule [🛡️ 双重网络检测机制]
+        direction TB
+        MonitorLoop[进入检测循环]:::process --> CheckDNS{DNS Ping<br>223.5.5.5}:::decision
+        
+        CheckDNS -- 响应正常 --> Sleep[休眠等待<br>Check Interval]:::terminator
+        CheckDNS -- 超时/不可达 --> CheckHTTP{HTTP 请求<br>baidu.com}:::decision
+        
+        CheckHTTP -- 200 OK --> Sleep
+        CheckHTTP -- "302 重定向 (被劫持)<br>或 请求超时" --> TriggerLogin[触发重连]:::error
+    end
+
+    subgraph LoginModule [🔐 RC4 加密认证流程]
+        direction TB
+        TriggerLogin --> GenKey[生成时间戳 Key]:::process
+        GenKey --> RC4[RC4 算法加密密码]:::process
+        RC4 --> PostReq[POST 发送认证请求]:::process
+        
+        PostReq --> IsSuccess{验证结果?}:::decision
+        IsSuccess -- 成功 --> Sleep
+        IsSuccess -- 失败 --> Backoff[指数退避重试<br>Retry Delay]:::error
+        Backoff --> PostReq
+    end
+
+    Sleep -.-> MonitorLoop
+```
 
 ### RC4 加密算法
 
@@ -243,5 +289,7 @@ if '1.1.1.3' in response.url or 'ac_portal' in response.url:
 |    `log_level`     | string |  ❌   |          "INFO"          | 日志级别（DEBUG/INFO/WARNING/ERROR） |
 
 ---
+
+
 
 **⭐ 如果这个项目对您有帮助，请给个 Star！**
