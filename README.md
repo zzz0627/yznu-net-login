@@ -1,8 +1,16 @@
-<h1 align='center'>Campus Network Auto-Login Daemon</h1>
+<h1 align="center">Campus Network Auto-Login Daemon</h1>
 
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Platform: Windows](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
+<p align="center">
+  <a href="https://www.python.org/downloads/">
+    <img src="https://img.shields.io/badge/python-3.9+-blue.svg" alt="Python 3.9+">
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT">
+  </a>
+  <a href="https://www.microsoft.com/windows">
+    <img src="https://img.shields.io/badge/platform-Windows-lightgrey.svg" alt="Platform: Windows">
+  </a>
+</p>
 
 本项目提供一个轻量级、低资源占用的校园网自动重连守护进程。专为解决凌晨 02:00 强制断网及网络不稳定场景设计，支持 RC4 加密认证与双重网络检测机制。
 
